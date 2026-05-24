@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>信州大学医学部 入試対策</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked@4/marked.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', 'Yu Gothic', sans-serif;
+      background: #eef1f5;
+      color: #1a1a2e;
+      line-height: 1.75;
+      min-height: 100vh;
+    }
+
+    /* ─── Header ─── */
+    header {
+      background: linear-gradient(135deg, #1a3a5c 0%, #2c5f8a 100%);
+      color: white;
+      padding: 28px 32px 24px;
+    }
+    header h1 { font-size: 1.55rem; font-weight: 700; letter-spacing: 0.02em; margin-bottom: 6px; }
+    header p { font-size: 0.88rem; opacity: 0.75; }
+
+    /* ─── Subject tabs ─── */
+    .subject-nav {
+      background: white;
+      display: flex;
+      overflow-x: auto;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      scrollbar-width: none;
+    }
+    .subject-nav::-webkit-scrollbar { display: none; }
+
+    .subject-tab {
+      flex-shrink: 0;
+      padding: 16px 30px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 600;
+      color: #778;
+      border-bottom: 3px solid transparent;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+    .subject-tab:hover { color: #1a3a5c; background: #f0f5fb; }
+    .subject-tab.active { color: #1a3a5c; border-bottom-color: #1a3a5c; }
+
+    /* ─── Main content ─── */
+    main {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 28px 16px 48px;
+    }
+
+    .subject-panel { display: none; }
+    .subject-panel.active { display: block; }
+
+    /* ─── Sub tabs ─── */
+    .sub-nav {
+      display: inline-flex;
+      gap: 4px;
+      background: white;
+      padding: 6px;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      margin-bottom: 22px;
+    }
+    .sub-tab {
+      padding: 9px 22px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.93rem;
+      font-family: inherit;
+      font-weight: 600;
+      color: #668;
+      border-radius: 7px;
+      transition: all 0.2s;
+    }
+    .sub-tab:hover { background: #eef3f9; color: #1a3a5c; }
+    .sub-tab.active { background: #1a3a5c; color: white; }
+
+    /* ─── Content sections ─── */
+    .strategy-section,
+    .pdf-section { display: none; }
+    .strategy-section.active,
+    .pdf-section.active { display: block; }
+
+    /* ─── Markdown styles ─── */
+    .markdown-content {
+      background: white;
+      padding: 36px 40px;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.09);
+    }
+    .markdown-content h1 {
+      font-size: 1.45rem;
+      color: #1a3a5c;
+      margin: 0 0 18px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #dbe6f0;
+    }
+    .markdown-content h2 {
+      font-size: 1.15rem;
+      color: #1a3a5c;
+      margin: 32px 0 12px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #dbe6f0;
+    }
+    .markdown-content h3 {
+      font-size: 1.02rem;
+      color: #2c5f8a;
+      margin: 22px 0 8px;
+    }
+    .markdown-content p { margin-bottom: 12px; }
+    .markdown-content ul, .markdown-content ol {
+      margin: 6px 0 12px 22px;
+    }
+    .markdown-content li { margin-bottom: 4px; }
+    .markdown-content strong { color: #1a3a5c; font-weight: 700; }
+    .markdown-content blockquote {
+      border-left: 4px solid #2c5f8a;
+      padding: 8px 16px;
+      background: #f0f5fb;
+      margin: 14px 0;
+      color: #556;
+      font-size: 0.92rem;
+      border-radius: 0 6px 6px 0;
+    }
+    .markdown-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.89rem;
+      overflow: auto;
+      display: block;
+    }
+    .markdown-content table th {
+      background: #1a3a5c;
+      color: white;
+      padding: 9px 13px;
+      text-align: left;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .markdown-content table td {
+      padding: 8px 13px;
+      border-bottom: 1px solid #dbe6f0;
+      vertical-align: top;
+    }
+    .markdown-content table tr:nth-child(even) td { background: #f7fafd; }
+    .markdown-content code {
+      background: #eef3f9;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: 'Courier New', 'Osaka-Mono', monospace;
+      font-size: 0.88em;
+      color: #c0392b;
+    }
+    .markdown-content pre {
+      background: #1e2d3d;
+      color: #d4e6f5;
+      padding: 18px 22px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 18px 0;
+      font-size: 0.855rem;
+      line-height: 1.65;
+    }
+    .markdown-content pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+    .markdown-content a { color: #2c5f8a; text-decoration: underline; }
+    .markdown-content hr { border: none; border-top: 1px solid #dbe6f0; margin: 24px 0; }
+
+    .loading {
+      color: #99aab5;
+      font-size: 0.95rem;
+      padding: 40px 0;
+      text-align: center;
+    }
+    .error { color: #e74c3c; }
+
+    /* ─── PDF viewer ─── */
+    .year-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .year-btn {
+      padding: 8px 22px;
+      border: 2px solid #1a3a5c;
+      background: white;
+      color: #1a3a5c;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-family: inherit;
+      font-weight: 700;
+      border-radius: 7px;
+      transition: all 0.2s;
+    }
+    .year-btn:hover { background: #eef3f9; }
+    .year-btn.active { background: #1a3a5c; color: white; }
+
+    .pdf-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 220px;
+      background: white;
+      border-radius: 12px;
+      color: #99aab5;
+      font-size: 1.05rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.09);
+    }
+    .pdf-frame {
+      width: 100%;
+      height: 82vh;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.09);
+      display: none;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 680px) {
+      header { padding: 18px 16px; }
+      header h1 { font-size: 1.15rem; }
+      .subject-tab { padding: 13px 16px; font-size: 0.88rem; }
+      .markdown-content { padding: 20px 18px; }
+      .markdown-content h1 { font-size: 1.15rem; }
+      .markdown-content h2 { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>信州大学医学部 入試対策</h1>
+  <p>前期日程 2021〜2025年度 ／ 傾向と対策・過去問PDF</p>
+</header>
+
+<nav class="subject-nav" id="subject-nav"></nav>
+
+<main id="main-content"></main>
+
+<script>
+  const SUBJECTS = [
+    {
+      id: 'eigo',
+      name: '英語',
+      mdFile: '信州大学医学部_傾向と対策_英語.md',
+      years: [2021, 2022, 2023, 2024, 2025],
+      pdfName: (y) => `信州大学医学部_前期_英語過去問（${y}年度）.pdf`
+    },
+    {
+      id: 'sugaku',
+      name: '数学',
+      mdFile: '信州大学医学部_傾向と対策_数学.md',
+      years: [2021, 2022, 2023, 2024, 2025],
+      pdfName: (y) => `信州大学医学部_前期_数学過去問（${y}年度）.pdf`
+    },
+    {
+      id: 'butsuri',
+      name: '物理',
+      mdFile: '信州大学医学部_傾向と対策_物理.md',
+      years: [2021, 2022, 2023, 2024, 2025],
+      pdfName: (y) => `信州大学医学部_前期_物理過去問（${y}年度）.pdf`
+    },
+    {
+      id: 'kagaku',
+      name: '化学',
+      mdFile: '信州大学医学部_傾向と対策_化学.md',
+      years: [2021, 2022, 2023, 2024, 2025],
+      pdfName: (y) => `信州大学医学部_前期_化学過去問（${y}年度）.pdf`
+    },
+    {
+      id: 'seibutsu',
+      name: '生物',
+      mdFile: '信州大学医学部_傾向と対策_生物.md',
+      years: [2020, 2021, 2022, 2024, 2025],
+      pdfName: (y) => `信州大学医学部_前期_生物過去問（${y}年度）.pdf`
+    }
+  ];
+
+  const nav = document.getElementById('subject-nav');
+  const main = document.getElementById('main-content');
+  const mdCache = {};
+
+  // ── Build DOM ──
+  SUBJECTS.forEach((subj, i) => {
+    const isFirst = i === 0;
+
+    // Tab
+    const tab = document.createElement('button');
+    tab.className = 'subject-tab' + (isFirst ? ' active' : '');
+    tab.dataset.id = subj.id;
+    tab.textContent = subj.name;
+    tab.onclick = () => switchSubject(subj.id);
+    nav.appendChild(tab);
+
+    // Year button HTML
+    const yearBtns = subj.years.map(y =>
+      `<button class="year-btn" onclick="loadPdf('${subj.id}', '${subj.pdfName(y)}', this)">${y}年度</button>`
+    ).join('');
+
+    // Panel
+    const panel = document.createElement('div');
+    panel.id = 'panel-' + subj.id;
+    panel.className = 'subject-panel' + (isFirst ? ' active' : '');
+    panel.innerHTML = `
+      <div class="sub-nav">
+        <button class="sub-tab active" onclick="switchSubTab('${subj.id}', 'strategy', this)">傾向と対策</button>
+        <button class="sub-tab" onclick="switchSubTab('${subj.id}', 'pdf', this)">過去問PDF</button>
+      </div>
+
+      <div id="strategy-${subj.id}" class="strategy-section active">
+        <div class="markdown-content">
+          <p class="loading" id="md-${subj.id}">読み込み中…</p>
+        </div>
+      </div>
+
+      <div id="pdf-section-${subj.id}" class="pdf-section">
+        <div class="year-buttons" id="years-${subj.id}">${yearBtns}</div>
+        <div class="pdf-placeholder" id="placeholder-${subj.id}">← 年度を選んでください</div>
+        <iframe class="pdf-frame" id="frame-${subj.id}"></iframe>
+      </div>
+    `;
+    main.appendChild(panel);
+  });
+
+  // ── Tab switching ──
+  function switchSubject(id) {
+    document.querySelectorAll('.subject-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.subject-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.subject-tab[data-id="${id}"]`).classList.add('active');
+    document.getElementById('panel-' + id).classList.add('active');
+    loadMarkdown(id);
+  }
+
+  function switchSubTab(subjId, target, btn) {
+    document.querySelectorAll(`#panel-${subjId} .sub-tab`).forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('strategy-' + subjId).classList.remove('active');
+    document.getElementById('pdf-section-' + subjId).classList.remove('active');
+    if (target === 'strategy') {
+      document.getElementById('strategy-' + subjId).classList.add('active');
+    } else {
+      document.getElementById('pdf-section-' + subjId).classList.add('active');
+    }
+  }
+
+  // ── PDF loading ──
+  function loadPdf(subjId, filename, btn) {
+    document.querySelectorAll(`#years-${subjId} .year-btn`).forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const placeholder = document.getElementById('placeholder-' + subjId);
+    const frame = document.getElementById('frame-' + subjId);
+    placeholder.style.display = 'none';
+    frame.style.display = 'block';
+    frame.src = encodeURIComponent(filename);
+  }
+
+  // ── Markdown loading ──
+  async function loadMarkdown(subjId) {
+    if (mdCache[subjId]) return;
+
+    const subj = SUBJECTS.find(s => s.id === subjId);
+    const el = document.getElementById('md-' + subjId);
+    if (!subj || !el) return;
+
+    try {
+      const res = await fetch(encodeURIComponent(subj.mdFile));
+      if (!res.ok) throw new Error(res.status);
+      const text = await res.text();
+      const container = el.closest('.markdown-content');
+      container.innerHTML = marked.parse(text);
+      mdCache[subjId] = true;
+    } catch (e) {
+      el.textContent = 'ファイルの読み込みに失敗しました。';
+      el.classList.add('error');
+    }
+  }
+
+  // ── Init ──
+  loadMarkdown('eigo');
+</script>
+
+</body>
+</html>
